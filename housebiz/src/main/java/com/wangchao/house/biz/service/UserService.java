@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface UserService {
 
-    public List<User> getUsers();
+    List<User> getUsers();
+
+    boolean addAccount(User account);
 
 }

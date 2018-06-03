@@ -19,6 +19,9 @@ public class HelloController {
     public String hello(ModelMap modelMap){
         List<User> users = userService.getUsers();
         User user = users.get(0);
+        if(user!=null){
+            throw new IllegalArgumentException();
+        }
         modelMap.put("user",user);
         return "hello";
     }
