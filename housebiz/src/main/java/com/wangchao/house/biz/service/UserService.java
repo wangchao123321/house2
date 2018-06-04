@@ -10,4 +10,7 @@ public interface UserService {
 
     boolean addAccount(User account);
 
+    boolean enable(String key);
+
+    User auth(String username, String password);
 }

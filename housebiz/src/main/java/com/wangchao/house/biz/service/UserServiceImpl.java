@@ -22,13 +22,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class UserServiceImpl implements UserService{
 
-    private final Cache<String,String> registerCache= CacheBuilder.newBuilder().maximumSize(100)
-            .expireAfterAccess(15, TimeUnit.MINUTES).removalListener(new RemovalListener<String, String>() {
-                @Override
-                public void onRemoval(RemovalNotification<String, String> notification) {
-                    userMapper.delete(notification.getValue());
-                }
-            }).build();
+
 
     @Autowired
     private MailService mailService;
@@ -39,8 +33,9 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private FileService fileService;
 
-    @Value("${domain.name}")
-    private String domainName;
+    @Value("${file.prefix}")
+    private String imgPrefix;
+
 
     @Override
     public List<User> getUsers() {
@@ -66,21 +61,35 @@ public class UserServiceImpl implements UserService{
         BeanHelper.onInsert(account);
         account.setEnable(0);
         userMapper.insert(account);
-        registerNotify(account.getEmail());
-        return false;
+        mailService.registerNotify(account.getEmail());
+        return true;
     }
 
-    /**
-     * 1 缓存key-email的关系
-     * 2 借助spring mail 发送邮件
-     * 3 借助异步框架进行异步操作
-     * @param email
-     */
-    @Async
-    public void registerNotify(String email) {
-        String randomKey= RandomStringUtils.randomAlphabetic(10);
-        registerCache.put(randomKey,email);
-        String url="http://"+domainName+"/accounts/verify?key="+randomKey;
-        mailService.sendMail("房产平台激活邮件",url,email);
+    @Override
+    public boolean enable(String key) {
+        return mailService.enable(key);
     }
+
+    @Override
+    public User auth(String username, String password) {
+        User user=new User();
+        user.setEmail(username);
+        user.setPasswd(HashUtils.encryPassword(password));
+        user.setEnable(1);
+        List<User> users = selectUsersByQuery(user);
+        if(!users.isEmpty()){
+            return users.get(0);
+        }
+        return null;
+    }
+
+    private List<User> selectUsersByQuery(User user) {
+        List<User> users = userMapper.selectUsersByQuery(user);
+        users.forEach(u ->{
+            u.setAvatar(imgPrefix+u.getAvatar());
+        });
+        return users;
+    }
+
+
 }

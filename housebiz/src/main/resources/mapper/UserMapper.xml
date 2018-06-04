@@ -15,7 +15,7 @@
         phone,
         email,
         aboutme,
-        passwd,
+        password,
         avatar,
         type,
         create_time,
@@ -34,7 +34,50 @@
         )
     </insert>
 
+    <select id="selectUsersByQuery" resultType="user">
+        select * from user
+        <where>
+            <if test="id !=null" >
+                and id = #{id}
+            </if>
+            <if test="email != null">
+                and email = #{email}
+            </if>
+            <if test="passwd != null">
+                and password = #{passwd}
+            </if>
+            <if test="enable != null">
+                and enable = #{enable}
+            </if>
+            <if test = "type != null and type!=0">
+                and type = #{type}
+            </if>
+        </where>
+    </select>
+
     <delete id="delete">
         delete from user where email=#{email}
     </delete>
+
+    <update id="update">
+        update user
+        <set>
+            <if test="phone !=null and phone != '' ">
+                phone = #{phone},
+            </if>
+            <if test="name !=null and name != '' ">
+                name = #{name},
+            </if>
+            <if test="aboutme !=null and aboutme != '' ">
+                aboutme = #{aboutme},
+            </if>
+            <if test="passwd !=null and passwd != '' ">
+                password = #{passwd},
+            </if>
+            <if test="enable !=null ">
+                enable = #{enable},
+            </if>
+        </set>
+        where email = #{email}
+    </update>
 </mapper>

@@ -15,4 +15,8 @@ public interface UserMapper {
     int insert(User account);
 
     int delete(String email);
+
+    int update(User updateUser);
+
+    List<User> selectUsersByQuery(User user);
 }

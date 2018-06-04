@@ -165,4 +165,26 @@ public class User {
     public void setAgencyName(String agencyName) {
         this.agencyName = agencyName;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", passwd='" + passwd + '\'' +
+                ", confirmPasswd='" + confirmPasswd + '\'' +
+                ", type=" + type +
+                ", createTime=" + createTime +
+                ", enable=" + enable +
+                ", avatar='" + avatar + '\'' +
+                ", avatarFile=" + avatarFile +
+                ", newPassword='" + newPassword + '\'' +
+                ", key='" + key + '\'' +
+                ", agencyId=" + agencyId +
+                ", aboutme='" + aboutme + '\'' +
+                ", agencyName='" + agencyName + '\'' +
+                '}';
+    }
 }

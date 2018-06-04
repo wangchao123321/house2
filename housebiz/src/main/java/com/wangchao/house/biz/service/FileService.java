@@ -26,6 +26,7 @@ public class FileService {
                 try {
                     localFile=saveToLocal(file,filePath);
                     String path= StringUtils.substringAfterLast(localFile.getAbsolutePath(),filePath);
+                    paths.add(path);
                 }catch (Exception e){
                     throw new IllegalArgumentException(e);
                 }
