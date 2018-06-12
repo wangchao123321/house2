@@ -1,5 +1,6 @@
 package com.wangchao.house.web.interceptor;
 
+import com.google.common.base.Joiner;
 import com.wangchao.house.common.constants.CommonConstants;
 import com.wangchao.house.common.model.User;
 import org.springframework.stereotype.Component;
@@ -9,12 +10,20 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 @Component
 public class AuthIntercepter implements HandlerInterceptor{
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        System.out.println("AuthIntercepter");
+        Map<String, String[]> map = request.getParameterMap();
+        map.forEach((k,v) ->{
+            if(k.equals("errorMsg") || k.equals("successMsg") || k.equals("target")){
+                request.setAttribute(k, Joiner.on(",").join(v));
+            }
+        });
         String requestURL = request.getRequestURI();
         if(requestURL.startsWith("/static") || requestURL.startsWith("/error")){
             return true;

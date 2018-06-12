@@ -13,4 +13,8 @@ public interface UserService {
     boolean enable(String key);
 
     User auth(String username, String password);
+
+    void updateUser(User updateUser, String email);
+
+    List<User> getUserByQuery(User query);
 }
