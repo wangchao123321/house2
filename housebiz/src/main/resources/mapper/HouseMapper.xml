@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wangchao.house.biz.mapper.HouseMapper">
+
+    <sql id="houseField">
+        a.id,
+        a.type,
+        a.name,
+        a.price,
+        a.images,
+        a.area,
+        a.beds,
+        a.baths,
+        a.rating,
+        a.remarks,
+        a.properties,
+        a.floor_plan,
+        a.tags,
+        a.create_time,
+        a.city_id,
+        a.community_id,
+        a.address,
+        a.state
+    </sql>
+
+    <sql id="houseCondition">
+      <where>
+          <if test="house.id != null and house.id != 0">
+            and a.id = #{house.id}
+          </if>
+          <if test="house.type != null" >
+            and a.type = #{house.type}
+          </if>
+          <if test="house.name != null and house.name != ''">
+            <bind name="pattern1" value="'%' + house.name + '%'" />
+            and a.name like #{pattern1}
+          </if>
+          <if test="house.ids">
+              and a.id in 
+              <foreach collection="house.ids" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+              </foreach>
+          </if>
+      </where>
+    </sql>
+
+    <select id="selectPageHouses" resultType="house" parameterType="map">
+        select
+         <include refid="houseField"/>
+         from house a
+        <include refid="houseCondition"/>
+        
+        <choose>
+            <when test="house.sort !=null and house.sort == 'price_asc'">
+              order by a.price asc
+            </when>
+            <when test="house.sort !=null and house.sort == 'price_desc'">
+                order by a.price desc
+            </when>
+        </choose>
+        
+        <if test="pageParams.offset != null and pageParams.limit != null">
+            limit #{pageParams.offset} , #{pageParams.limit}
+        </if>
+        <if test="pageParams.offset == null and pageParams.limit != null">
+            limit  #{pageParams.limit}
+        </if>
+
+    </select>
+
+    <select id="selectPageCount" resultType="long" parameterType="house">
+        select count(1) from house a
+        <include refid="houseCondition"/>
+    </select>
+
+    <insert id="insert"  useGeneratedKeys="true" keyProperty="id">
+     insert into house(
+                     type,
+                     name,
+                     price,
+                     images,
+                     area,
+                     beds,
+                     baths,
+                     rating,
+                     remarks,
+                     properties,
+                     floor_plan,
+                     tags,
+                     create_time,
+                     city_id,
+                     community_id,
+                     address,
+                     state
+                  )
+                 value(
+                     #{type},
+                     #{name},
+                     #{price},
+                     #{images},
+                     #{area},
+                     #{beds},
+                     #{baths},
+                     #{rating},
+                     #{remarks},
+                     #{properties},
+                     #{floorPlan},
+                     #{tags},
+                     #{createTime},
+                     #{cityId},
+                     #{communityId},
+                     #{address},
+                     #{state}
+                     )
+   </insert>
+
+    
+    <select id="selectCommunity" parameterType="community">
+        select * from community
+        <where>
+            <if test="id != null and id != 0">
+              and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+        </where>
+    </select>
+</mapper>

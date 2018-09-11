@@ -16,7 +16,6 @@ public class WebMvcConf extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        System.out.println("-----------------------");
         registry.addInterceptor(authIntercepter).excludePathPatterns("/static").addPathPatterns("/**");
         registry.addInterceptor(authActionIntercepter).addPathPatterns("/accounts/profile");
         super.addInterceptors(registry);

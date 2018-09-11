@@ -16,10 +16,13 @@
     <typeAliases>
         <!--<package name="com.wangchao.house.common.model"/>-->
         <typeAlias type="com.wangchao.house.common.model.User" alias="user"/>
+        <typeAlias type="com.wangchao.house.common.model.House" alias="house"/>
+        <typeAlias type="com.wangchao.house.common.model.Community" alias="community"/>
     </typeAliases>
 
     <mappers>
         <mapper resource="mapper/UserMapper.xml"/>
+        <mapper resource="mapper/HouseMapper.xml"/>
         <!--<package name="/mapper/*"/>-->
     </mappers>
 </configuration>
